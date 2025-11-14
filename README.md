@@ -1,0 +1,134 @@
+**Вариант 4. 0-1 Рюкзак с жадным алгоритмом**
+
+**Задача**: реализовать жадный приближенный алгоритм для 0-1 рюкзака. Отличие от дробного
+в том, что предметы нельзя дробить.
+
+**Требования**:
+- Реализовать 2-аппроксимационный жадный алгоритм
+- Вывести список выбранных предметов и общую стоимость
+- Указать коэффициент аппроксимации
+
+**Входные данные**:
+Предметы: {(вес=3, стоимость=12), (вес=2, стоимость=8),
+(вес=4, стоимость=20), (вес=5, стоимость=18)}
+Вместимость: 7
+
+**Функция knapsack_01_greedy**:
+
+   **Объявление временного вектора**: 
+**vector<tuple<double, int, int, int>> items_with_ratio** - Создание вектора для хранения предметов с дополнительной информацией.
+
+**Заполнение вектора с расчетом удельной стоимости**:
+
+for (size_t i = 0; i < items.size(); i++) {
+
+  double ratio = (double)items[i].second / items[i].first;
+    
+  items_with_ratio.push_back(make_tuple(ratio, i, items[i].first, items[i].second));
+}
+
+Для каждого предмета вычисляется удельная стоимость и сохраняется вместе с оригинальным индексом.
+
+**Сортировка предметов**:
+
+sort(items_with_ratio.begin(), items_with_ratio.end(), 
+
+[](const tuple<double, int, int, int>& a, const tuple<double, int, int, int>& b) {
+return get<0>(a) > get<0>(b);
+
+Сортировка предметов по убыванию удельной стоимости с использованием лямбда-функции
+
+**Инициализация переменных результатов**:
+
+vector<pair<int, int>> selected_items;
+
+int total_value = 0;
+
+int total_weight = 0;
+
+Подготовка переменных для накопления результатов
+
+**Жадный выбор предметов**:
+
+for (const auto& item : items_with_ratio) {
+
+  double ratio = get<0>(item);
+  
+  int original_index = get<1>(item);
+  
+  int weight = get<2>(item);
+  
+  int value = get<3>(item);
+    
+  if (total_weight + weight <= capacity) 
+  
+  selected_items.push_back(items[original_index]);
+  
+ total_value += value;
+ 
+ total_weight += weight;
+    
+Последовательный выбор предметов, которые помещаются в рюкзак
+
+**Поиск максимального предмета**:
+
+int max_single_value = 0;
+
+for (const auto& item : items) {
+
+  if (item.second > max_single_value && item.first <= capacity) 
+  
+  max_single_value = item.second;
+
+  Нахождение предмета с максимальной стоимостью, который помещается в рюкзак
+        
+**Вычисление коэффициента аппроксимации**:
+
+double approx_ratio;
+
+if (total_value == 0) {
+
+if (max_single_value == 0) {
+    
+  approx_ratio = 1.0;
+        
+  } else {
+      approx_ratio = numeric_limits<double>::infinity();
+      
+  
+    
+  }  else {
+    approx_ratio = (double)max(max_single_value, total_value) / total_value;
+
+approx_ratio = min(approx_ratio, 2.0);
+
+Расчет и гарантирование коэффициента аппроксимации ≤ 2.0
+
+
+**Функция main**
+
+**Инициализация данных**:
+
+vector<pair<int, int>> items = {{3, 12}, {2, 8}, {4, 20}, {5, 18}};
+
+int capacity = 7;
+
+Определение тестовых входных данных
+
+
+**Вызов алгоритма**
+
+**auto [selected_items, total_value, approx_ratio] = knapsack_01_greedy(items, capacity)** - Structured binding (C++17) для распаковки возвращаемых значений.
+
+**Вывод результатов**
+
+cout << "=== ЖАДНЫЙ АЛГОРИТМ ДЛЯ 0-1 РЮКЗАКА ===" << endl;
+
+// ... вывод информации ...
+
+Форматированный вывод всех результатов работы алгоритма.
+
+
+
+
+
